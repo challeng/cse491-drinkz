@@ -45,4 +45,15 @@ def load_inventory(fp):
     Note that a LiquorMissing exception is raised if bottle_types_db does
     not contain the manufacturer and liquor name already.
     """
+    reader = csv.reader(fp)
+
+    x = []
+    n = 0
+
+    for (mfg, name, amount) in reader:
+        n += 1
+        db.add_to_inventory(mfg, name, amount)
+
+    return n
+
     # FIXME
