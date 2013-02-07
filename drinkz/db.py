@@ -17,6 +17,9 @@ def _reset_db():
 class LiquorMissing(Exception):
     pass
 
+class BadData(Exception):
+    pass
+
 def add_bottle_type(mfg, liquor, typ):
     "Add the given bottle type into the drinkz database."
     _bottle_types_db.append((mfg, liquor, typ))
@@ -34,6 +37,8 @@ def add_to_inventory(mfg, liquor, amount):
         err = "Missing liquor: manufacturer '%s', name '%s'" % (mfg, liquor)
         raise LiquorMissing(err)
 
+    print mfg
+
     # just add it to the inventory database as a tuple, for now.
     _inventory_db.append((mfg, liquor, amount))
 
@@ -49,11 +54,27 @@ def get_liquor_amount(mfg, liquor):
     amounts = []
     for (m, l, amount) in _inventory_db:
         if mfg == m and liquor == l:
+            if amount.endswith("oz"):
+                amount = amount[:-2]
+                amount = float(amount) * 29.5735
+            elif amount.endswith("ml"):
+                amount = amount[:-2]
             amounts.append(amount)
 
-    return amounts[0]
+    total = 0
+    for amount in amounts:
+        print amount
+        total = total + int(amount)
+        print total
+
+    return str(total) +" ml"
 
 def get_liquor_inventory():
     "Retrieve all liquor types in inventory, in tuple form: (mfg, liquor)."
-    for (m, l, _) in _inventory_db:
-        yield m, l
+    for (m, l, a) in _inventory_db:
+        yield m, l, a
+
+def get_liquor_types():
+    "Retrieve all liquor types in inventory, in tuple form: (mfg, liquor)."
+    for (m, l, t) in _bottle_types_db:
+        yield m, l, t

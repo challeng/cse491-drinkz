@@ -1,5 +1,5 @@
 # this file has, at the end, a blank line, which should be handled
 # (ignored!) by our loading script - just like these comments.
-Johnnie Walker,Black Label,blended scotch
+Johnnie Walker,Black Label,200
 
-Jim Challenger,Brown Label,blended scotch
+Jim Challenger,Brown Label,200
