@@ -33,12 +33,15 @@ def load_bottle_types(fp):
       #  db.add_bottle_type(mfg, name, typ)
 
     #reader = csv.reader(fp)
-    try:
-        new_reader = data_reader(fp)
-    except db.BadData:
-        pass
+    new_reader = data_reader(fp)
 
-    for mfg, name, typ in new_reader:
+
+    for line in new_reader:
+        try:
+            (mfg, name, typ) = line
+        except ValueError:
+            print 'Badly formatted line: %s' % line
+            continue
         n += 1
         db.add_bottle_type(mfg, name, typ)
  
@@ -76,13 +79,15 @@ def load_inventory(fp):
     x = []
     n = 0
 
-    try:
-        new_reader = data_reader(fp)
-    except db.BadData:
-        pass
+    new_reader = data_reader(fp)
 
-    
-    for mfg, name, amount in new_reader:
+
+    for line in new_reader:
+        try:
+            (mfg, name, amount) = line
+        except ValueError:
+            print 'Badly formatted line: %s' % line
+            continue
         n += 1
         db.add_bottle_type(mfg, name, 'test_type')
         db.add_to_inventory(mfg, name, amount)
