@@ -1,17 +1,23 @@
 """
 Database functionality for drinkz information.
+
+I choose to use a set to store my recipes.
+It seemed like we would not need more then one of each recipe
+and also that we did not need something like a dictionary because
+there are no key,value pairs.
 """
 
 # private singleton variables at module level
 _bottle_types_db = set([])
-#_new_bottle_types_db = []
 _inventory_db = {}
+_recipe_db = set()
 
 def _reset_db():
     "A method only to be used during testing -- toss the existing db info."
     global _bottle_types_db, _inventory_db
     _bottle_types_db = set([])
     _inventory_db = {}
+    _recipe_db = set()
 
 # exceptions in Python inherit from Exception and generally don't need to
 # override any methods.
@@ -30,6 +36,12 @@ def _check_bottle_type_exists(mfg, liquor):
 
     return False
 
+def _find_bottle_from_type(typ):
+    for(m, l, t) in _bottle_types_db:
+        if typ == t:
+            return (m, l, t)
+    return [] 
+
 def add_to_inventory(mfg, liquor, amount):
     "Add the given liquor/amount to inventory."
     if not _check_bottle_type_exists(mfg, liquor):
@@ -41,18 +53,12 @@ def add_to_inventory(mfg, liquor, amount):
     # just add it to the inventory database as a tuple, for now.
     #_inventory_db.append((mfg, liquor, amount))
     #print "adding" + amount
-    if amount.endswith("oz"):
-        amount = amount[:-2]
-        amount = float(amount) * 29.5735
-    elif amount.endswith("ml"):
-        amount = amount[:-2]
-
-    amount = float(amount)
+    amount = convert_to_ml(amount)
 
     if (mfg, liquor) in _inventory_db:
-        _inventory_db[(mfg, liquor)] = str(int(_inventory_db[(mfg, liquor)][:-2]) + amount) + " ml"
+        _inventory_db[(mfg, liquor)] = _inventory_db[(mfg, liquor)] + amount
     else:
-        _inventory_db[(mfg, liquor)] = str(int(amount)) + " ml"
+        _inventory_db[(mfg, liquor)] = amount
 
 
 def check_inventory(mfg, liquor):
@@ -72,14 +78,13 @@ def get_liquor_amount(mfg, liquor):
         l = k[1]
         amount = _inventory_db[k]
         if mfg == m and liquor == l:
-            amount = str(amount)[:-2]
             amounts.append(amount)
 
     total = 0
     for amount in amounts:
         total = total + float(amount)
 
-    return str(int(total)) +" ml"
+    return total
 
 def get_liquor_inventory():
     "Retrieve all liquor types in inventory, in tuple form: (mfg, liquor)."
@@ -87,9 +92,49 @@ def get_liquor_inventory():
         m = k[0]
         l = k[1]
         a = v
-        yield m, l, a
+        yield m, l
 
 def get_liquor_types():
     "Retrieve all liquor types in inventory, in tuple form: (mfg, liquor)."
     for (m, l, t) in _bottle_types_db:
         yield m, l, t
+
+
+
+def add_recipe(r):
+    _recipe_db.add(r)
+
+def get_recipe(name):
+    for r in _recipe_db.iteritems():
+        if r.name == name:
+            yield r
+
+
+def get_all_recipes():
+    for r in _recipe_db.iteritems():
+        yield r
+
+
+def convert_to_ml(amount):
+    if amount.endswith("oz"):
+        amount = amount[:-2]
+        amount = float(amount) * 29.5735
+    elif amount.endswith("ml"):
+        amount = amount[:-2]
+    elif "gallon" in amount:
+        amount = amount[:-6]
+        amount = float(amount) * 3785.41
+
+    amount = float(amount)
+    return amount    
+
+
+
+
+
+
+
+
+
+
+

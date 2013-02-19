@@ -26,7 +26,7 @@ def test_total_ml_oz():
     db.add_to_inventory('Johnnie Walker', 'Black Label', '1000 oz')
     db.add_to_inventory('Johnnie Walker', 'Black Label', '2000 ml')
 
-    assert db.get_liquor_amount('Johnnie Walker', 'Black Label') == "31573 ml"
+    assert db.get_liquor_amount('Johnnie Walker', 'Black Label') == 31573.5
 
 
 def test_total_ml():
@@ -37,7 +37,7 @@ def test_total_ml():
     db.add_to_inventory('Johnnie Walker', 'Black Label', '1000 ml')
     db.add_to_inventory('Johnnie Walker', 'Black Label', '2000 ml')
 
-    assert db.get_liquor_amount('Johnnie Walker', 'Black Label') == "3000 ml"
+    assert db.get_liquor_amount('Johnnie Walker', 'Black Label') == 3000
 
 def test_add_bottle_type_1():
     print 'Note that output from failing tests is printed out!'
@@ -69,7 +69,7 @@ def test_get_liquor_amount_1():
     db.add_bottle_type('Johnnie Walker', 'Black Label', 'blended scotch')
     db.add_to_inventory('Johnnie Walker', 'Black Label', '1000 ml')
     amount = db.get_liquor_amount('Johnnie Walker', 'Black Label')
-    assert amount == '1000 ml', amount
+    assert amount == 1000, amount
 
 def test_bulk_load_inventory_1():
     db._reset_db()
@@ -116,7 +116,7 @@ def test_get_liquor_amount_2():
     n = load_bulk_data.load_inventory(fp)
 
     amount = db.get_liquor_amount('Johnnie Walker', 'Black Label')
-    assert amount == '1000 ml', amount
+    assert amount == 1000, amount
 
 def test_bulk_load_bottle_types_1():
     db._reset_db()
@@ -156,12 +156,12 @@ def test_script_load_bottle_types_1():
 
     assert exit_code == 0, 'non zero exit code %s' % exit_code
 
-def test_script_load_inventory():
+def test_script_load_inventory_incorrect():
     scriptpath = 'bin/load-liquor-inventory'
     module = imp.load_source('llt', scriptpath)
     exit_code = module.main([scriptpath, 'test-data/bottle-types-data-4.txt'])
 
-    assert exit_code == 0, 'non zero exit code %s' % exit_code
+    assert exit_code == -1, 'non zero exit code %s' % exit_code
     
 def test_get_liquor_inventory():
     db._reset_db()
@@ -170,7 +170,7 @@ def test_get_liquor_inventory():
     db.add_to_inventory('Johnnie Walker', 'Black Label', '1000 ml')
 
     x = []
-    for mfg, liquor, amount in db.get_liquor_inventory():
-        x.append((mfg, liquor, amount))
+    for mfg, liquor in db.get_liquor_inventory():
+        x.append((mfg, liquor))
 
-    assert x == [('Johnnie Walker', 'Black Label', '1000 ml')], x
+    assert x == [('Johnnie Walker', 'Black Label')], x
