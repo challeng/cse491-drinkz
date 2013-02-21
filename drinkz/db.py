@@ -14,7 +14,7 @@ _recipe_db = set()
 
 def _reset_db():
     "A method only to be used during testing -- toss the existing db info."
-    global _bottle_types_db, _inventory_db
+    global _bottle_types_db, _inventory_db, _recipe_db
     _bottle_types_db = set([])
     _inventory_db = {}
     _recipe_db = set()
@@ -37,10 +37,12 @@ def _check_bottle_type_exists(mfg, liquor):
     return False
 
 def _find_bottle_from_type(typ):
+    final = []
     for(m, l, t) in _bottle_types_db:
         if typ == t:
-            return (m, l, t)
-    return [] 
+            final.append((m, l, t))
+            continue
+    return final
 
 def add_to_inventory(mfg, liquor, amount):
     "Add the given liquor/amount to inventory."
@@ -105,13 +107,13 @@ def add_recipe(r):
     _recipe_db.add(r)
 
 def get_recipe(name):
-    for r in _recipe_db.iteritems():
+    for r in _recipe_db:
         if r.name == name:
-            yield r
+            return r
 
 
 def get_all_recipes():
-    for r in _recipe_db.iteritems():
+    for r in _recipe_db:
         yield r
 
 
@@ -124,6 +126,9 @@ def convert_to_ml(amount):
     elif "gallon" in amount:
         amount = amount[:-6]
         amount = float(amount) * 3785.41
+    elif "liter" in amount:
+        amount = amount[:-5]
+        amount = float(amount) * 1000
 
     amount = float(amount)
     return amount    

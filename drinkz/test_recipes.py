@@ -46,6 +46,7 @@ class TestBasicRecipeStuff(unittest.TestCase):
         x = db.get_recipe('scotch on the rocks')
         assert x == r
 
+
     def test_get_recipe_2(self):
         x = db.get_recipe('scotch on the rocks')
         assert not x, x                    # no such recipe
@@ -71,6 +72,7 @@ class TestIngredients(object):
                                                    '4 oz')])
 
         x = r.need_ingredients()
+        print x
         assert not x, x
 
     def test_need_ingredients_2(self):
@@ -87,6 +89,7 @@ class TestIngredients(object):
                                                       '1.5 oz')])
 
         missing = r.need_ingredients()
+        #print missing
         assert missing
         assert len(missing) == 1
 
@@ -97,6 +100,10 @@ class TestIngredients(object):
         r = recipes.Recipe('whiskey bath', [('blended scotch', '2 liter')])
 
         missing = r.need_ingredients()
+        print "GENERIC"
+        print missing
+
+        #assert that missing doesnt exist(the missing list is empty)
         assert not missing, missing
 
     def test_generic_replacement_fail(self):

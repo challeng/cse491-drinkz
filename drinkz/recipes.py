@@ -1,4 +1,4 @@
-from . import db.py
+from . import db
 
 class Recipe(object):
 	"""
@@ -11,25 +11,51 @@ class Recipe(object):
 		self.name = name
 		self.ingredients = ingredients
 
-	def need_ingredients(inventory_db):
+	def __eq__(self, other):
+		if self.name == other.name and self.ingredients == other.ingredients:
+			return True
+		return False
+
+	def need_ingredients(self):
 		needed_ingredients = []
-		for i in ingredients:
+		for i in self.ingredients:
 			typ = i[0]
 			amount = i[1]
 			bottle = db._find_bottle_from_type(typ)
-			mfg = bottle[0]
-			liquor = bottle[1]
+			newAmount = 0
 
-			for k,v in inventory_db:
-				#if bottle exists
-				if (mfg, liquor) == k:
-					#if we dont have enough
-					if amounts > v:
-						 needed = a - v
-						 needed_ingredients.add((typ, needed))
-				#bottle doesnt exist
-				else:
-					needed_ingredients.add((typ, amount))
+			print bottle
+			#no bottle
+			if bottle == []:
+				needed_ingredients.append((typ, db.convert_to_ml(amount)))
+				continue
+			#one bottle
+			elif len(bottle) == 1:
+				mfg = bottle[0][0]
+				liquor = bottle[0][1]
+				newAmount = db.get_liquor_amount(mfg, liquor)
+			#more bottles
+			else:
+				for b in bottle:
+					mfg = b[0]
+					liquor = b[1]
+					if db.get_liquor_amount(mfg, liquor) > newAmount:
+						newAmount = db.get_liquor_amount(mfg, liquor)
+
+				#mfg = bottle[0]
+				#liquor = bottle[1]
+
+
+			#if we dont have enough
+			if db.convert_to_ml(amount) > newAmount:
+				print "amount more"
+				print db.convert_to_ml(amount)
+				print newAmount
+				needed = db.convert_to_ml(amount) - newAmount
+				needed_ingredients.append((typ, needed))
+
+			continue
+
 
 		return needed_ingredients
 
