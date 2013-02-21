@@ -27,7 +27,9 @@ class LiquorMissing(Exception):
 
 def add_bottle_type(mfg, liquor, typ):
     "Add the given bottle type into the drinkz database."
+
     _bottle_types_db.add((mfg, liquor, typ))
+
 
 def _check_bottle_type_exists(mfg, liquor):
     for (m, l, _) in _bottle_types_db:
@@ -64,12 +66,14 @@ def add_to_inventory(mfg, liquor, amount):
 
 
 def check_inventory(mfg, liquor):
+
     for k,v in _inventory_db.iteritems():
         m = k[0]
         l = k[1]
         if mfg == m and liquor == l:
             return True
         
+
     return False
 
 def get_liquor_amount(mfg, liquor):

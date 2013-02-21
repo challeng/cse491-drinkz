@@ -76,8 +76,12 @@ def load_inventory(fp):
     not contain the manufacturer and liquor name already.
     """
 
+    reader = csv.reader(fp)
+
+
     x = []
     n = 0
+
 
     new_reader = data_reader(fp)
 
@@ -96,3 +100,12 @@ def load_inventory(fp):
 
 
     return n
+
+    for (mfg, name, amount) in reader:
+        n += 1
+        db.add_to_inventory(mfg, name, amount)
+
+    return n
+
+    # FIXME
+
