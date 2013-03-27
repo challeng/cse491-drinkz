@@ -24,6 +24,9 @@ def _reset_db():
 class LiquorMissing(Exception):
     pass
 
+class DuplicateRecipeName(Exception):
+    pass
+
 
 def add_bottle_type(mfg, liquor, typ):
     "Add the given bottle type into the drinkz database."
@@ -133,6 +136,8 @@ def convert_to_ml(amount):
     elif "liter" in amount:
         amount = amount[:-5]
         amount = float(amount) * 1000
+    else:
+        amount = -1;
 
     amount = float(amount)
     return amount    
