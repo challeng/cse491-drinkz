@@ -24,7 +24,7 @@ def _reset_db():
 def save_db(filename):
     fp = open(filename, 'wb')
 
-    tosave = (_bottle_types_db, _inventory_db)
+    tosave = (_bottle_types_db, _inventory_db, _recipe_db)
     dump(tosave, fp)
 
     fp.close()
@@ -34,7 +34,7 @@ def load_db(filename):
     fp = open(filename, 'rb')
 
     loaded = load(fp)
-    (_bottle_types_db, _inventory_db) = loaded
+    (_bottle_types_db, _inventory_db, _recipe_db) = loaded
 
     fp.close()
 
@@ -85,6 +85,7 @@ def add_to_inventory(mfg, liquor, amount):
         _inventory_db[(mfg, liquor)] = _inventory_db[(mfg, liquor)] + amount
     else:
         _inventory_db[(mfg, liquor)] = amount
+
 
 
 def check_inventory(mfg, liquor):
@@ -161,7 +162,10 @@ def convert_to_ml(amount):
     amount = float(amount)
     return amount    
 
-
+def print_recipe_size():
+    print len(_recipe_db)
+    for e in _recipe_db:
+        print e
 
 
 

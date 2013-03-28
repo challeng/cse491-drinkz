@@ -4,25 +4,18 @@ import urlparse
 import simplejson
 
 from drinkz import db, recipes
+#import db
+import imp
 
-db._reset_db()
+#CALL make-test-database then check that it works
+scriptpath = 'bin/make-test-database'
+filename = 'db.txt'
+module = imp.load_source('llt', scriptpath)
+exit_code = module.main([scriptpath, filename])
 
-db.add_bottle_type('Johnnie Walker', 'black label', 'blended scotch')
-db.add_to_inventory('Johnnie Walker', 'black label', '500 ml')
-db.add_bottle_type('Uncle Herman\'s', 'moonshine', 'blended scotch')
-db.add_to_inventory('Uncle Herman\'s', 'moonshine', '5 liter')
+db.load_db(filename)
 
-db.add_bottle_type('Gray Goose', 'vodka', 'unflavored vodka')
-db.add_to_inventory('Gray Goose', 'vodka', '1 liter')
-db.add_bottle_type('Rossi', 'extra dry vermouth', 'vermouth')
-db.add_to_inventory('Rossi', 'extra dry vermouth', '24 oz')
 
-r = recipes.Recipe('scotch on the rocks', [('blended scotch', '4 oz')])
-db.add_recipe(r)
-r = recipes.Recipe('vodka martini', [('unflavored vodka', '6 oz'), ('vermouth', '1.5 oz')])
-db.add_recipe(r)
-r = recipes.Recipe('vomit inducing martini', [('orange juice','6 oz'),('vermouth','1.5 oz')])
-db.add_recipe(r)
 
 
 dispatch = {
@@ -59,6 +52,22 @@ class SimpleApp(object):
             
     def index(self, environ, start_response):
         data = """\
+
+<head><title>Index</title>
+<style type="text/css">
+h1 {color:red;}
+</style>
+<script>
+function myFunction()
+{
+alert("I am a really cool alert box!");
+}
+</script>
+</head>
+<body>
+<h1>Index</h1>
+<input type="button" onclick="myFunction()" value="Show alert box">
+        
 Visit:
 <a href='content'>a file</a>,
 <a href='error'>an error</a>,
@@ -70,12 +79,22 @@ Visit:
 <a href='index'>Index</a>
 <p>
 <img src='/helmet'>
+</body>
 """
         start_response('200 OK', list(html_headers))
         return [data]
 
     def inventory(self, environ, start_response):
         data = """\
+
+<head><title>Inventory</title>
+<style type="text/css">
+h1 {color:red;}
+</style>
+</head>
+<body>
+<h1>Inventory</h1>
+        
 Visit:
 <a href='content'>a file</a>,
 <a href='error'>an error</a>,
@@ -87,6 +106,7 @@ Visit:
 <a href='index'>Index</a>
 <p>
 <img src='/helmet'>
+</body>
 """
 
         for m,l in db.get_liquor_inventory():
@@ -104,6 +124,15 @@ Visit:
 
     def recipes(self, environ, start_response):
         data = """\
+
+<head><title>Recipes</title>
+<style type="text/css">
+h1 {color:red;}
+</style>
+</head>
+<body>
+<h1>Recipes</h1>
+        
 Visit:
 <a href='content'>a file</a>,
 <a href='error'>an error</a>,
@@ -115,6 +144,7 @@ Visit:
 <a href='index'>Index</a>
 <p>
 <img src='/helmet'>
+</body>
 """
         
         for r in db.get_all_recipes():
@@ -133,7 +163,29 @@ Visit:
         
     def somefile(self, environ, start_response):
         content_type = 'text/html'
-        data = open('somefile.html').read()
+        data = """\
+
+<head><title>Content</title>
+<style type="text/css">
+h1 {color:red;}
+</style>
+</head>
+<body>
+<h1>Content</h1>
+        
+Visit:
+<a href='content'>a file</a>,
+<a href='error'>an error</a>,
+<a href='helmet'>an image</a>,
+<a href='somethingelse'>something else</a>, or
+<a href='form'>a form...</a>
+<a href='inventory'>Inventory</a>
+<a href='recipes'>Recipes</a>
+<a href='index'>Index</a>
+<p>
+<img src='/helmet'>
+</body>
+"""
 
         start_response('200 OK', list(html_headers))
         return [data]
@@ -141,7 +193,21 @@ Visit:
     def error(self, environ, start_response):
         status = "404 Not Found"
         content_type = 'text/html'
-        data = "Couldn't find your stuff."
+        data = """\
+        
+
+<head><title>Error</title>
+<style type="text/css">
+h1 {color:red;}
+</style>
+</head>
+<body>
+<h1>Error</h1>
+
+Couldn't find your stuff.
+</body>
+"""
+        
        
         start_response('200 OK', list(html_headers))
         return [data]
@@ -169,9 +235,35 @@ Visit:
         content_type = 'text/html'
 
         if(num_amount != -1):
-            data = "Amount in ML: %d; <a href='./'>return to index</a>" % (num_amount)
+            data1 = "Amount in ML: %d; <a href='./'>return to index</a>" % (num_amount)
         else:
-            data = "Unknown Units; <a href='./'>return to index</a>"
+            data1 = "Unknown Units; <a href='./'>return to index</a>"
+
+        data = """\
+
+<head><title>Form Results</title>
+<style type="text/css">
+h1 {color:red;}
+</style>
+</head>
+<body>
+<h1>Form Results</h1>"""
+
+        data += data1
+        data += """
+Visit:
+<a href='content'>a file</a>,
+<a href='error'>an error</a>,
+<a href='helmet'>an image</a>,
+<a href='somethingelse'>something else</a>, or
+<a href='form'>a form...</a>
+<a href='inventory'>Inventory</a>
+<a href='recipes'>Recipes</a>
+<a href='index'>Index</a>
+<p>
+<img src='/helmet'>
+</body>
+"""
 
 
         start_response('200 OK', list(html_headers))

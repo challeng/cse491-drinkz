@@ -1,5 +1,9 @@
 from . import db
 
+def create(name, ingredients):
+	r = Recipe(name, ingredients)
+	return r
+
 class Recipe(object):
 	"""
 	docstring for Recipe
@@ -10,6 +14,8 @@ class Recipe(object):
 		super(Recipe, self).__init__()
 		self.name = name
 		self.ingredients = ingredients
+
+
 
 	def __eq__(self, other):
 		if self.name == other.name and self.ingredients == other.ingredients:

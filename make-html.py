@@ -9,24 +9,12 @@ except OSError:
     # already exists
     pass
 
-db._reset_db()
+import imp
 
-db.add_bottle_type('Johnnie Walker', 'black label', 'blended scotch')
-db.add_to_inventory('Johnnie Walker', 'black label', '500 ml')
-db.add_bottle_type('Uncle Herman\'s', 'moonshine', 'blended scotch')
-db.add_to_inventory('Uncle Herman\'s', 'moonshine', '5 liter')
-
-db.add_bottle_type('Gray Goose', 'vodka', 'unflavored vodka')
-db.add_to_inventory('Gray Goose', 'vodka', '1 liter')
-db.add_bottle_type('Rossi', 'extra dry vermouth', 'vermouth')
-db.add_to_inventory('Rossi', 'extra dry vermouth', '24 oz')
-
-r = recipes.Recipe('scotch on the rocks', [('blended scotch', '4 oz')])
-db.add_recipe(r)
-r = recipes.Recipe('vodka martini', [('unflavored vodka', '6 oz'), ('vermouth', '1.5 oz')])
-db.add_recipe(r)
-r = recipes.Recipe('vomit inducing martini', [('orange juice','6 oz'),('vermouth','1.5 oz')])
-db.add_recipe(r)
+#CALL make-test-database then check that it works
+scriptpath = 'bin/make-test-database'
+module = imp.load_source('llt', scriptpath)
+exit_code = module.main([scriptpath, 'jim.txt'])
 
 
 ###

@@ -1,0 +1,69 @@
+#! /usr/bin/env python
+import sys
+#import _mypath
+import socket
+
+
+def main(args):
+   if len(args) != 3:
+      print 'Wrong number of arguments'
+      return -1
+
+   hostname = args[1]
+   port = int(args[2])
+
+
+   #socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   try:
+      #create an AF_INET, STREAM socket (TCP)
+      s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+   except socket.error, msg:
+      print 'Failed to create socket. Error code: ' + str(msg[0]) + ' , Error message : ' + msg[1]
+      return -1
+ 
+   print 'Socket Created'
+
+   #ip = socket.gethostbyname(hostname)
+
+   try:
+      remote_ip = socket.gethostbyname(hostname)
+   except socket.gaierror:
+      #could not resolve
+      print 'Hostname could not be resolved. Exiting'
+      return -1
+
+   print 'Ip address of ' + hostname + ' is ' + remote_ip
+ 
+   #Connect to remote server
+   s.connect((remote_ip, port))
+ 
+   print 'Socket Connected to ' + hostname + ' on ip ' + remote_ip
+   
+   #Send some data to remote server
+   message = "GET / HTTP/1.1\r\n\r\n"
+ 
+   try:
+      #Set the whole string
+      s.sendall(message)
+   except socket.error:
+      #Send failed
+      print 'Send failed'
+      return -1
+ 
+   print 'Message send successfully'
+
+   reply = s.recv(4096)
+ 
+   print reply
+
+
+   return 0
+    
+# run the 'main()' function if this script is run from the command line;
+# this will not execute if the file is imported.
+#
+# pass in command line arguments verbatim, as a list.
+
+if __name__ == '__main__':
+   exit_code = main(sys.argv)
+   sys.exit(exit_code)
