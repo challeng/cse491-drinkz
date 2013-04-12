@@ -15,6 +15,8 @@ import imp
 
 from . import db, load_bulk_data
 
+
+#THESE THREE RPC TESTS DEPEND ON SERVER NAME WHICH I CHANGE ACOORIDNG TO WHAT I GET WHEN I RUN run-web
 server_name = "http://host-21-166.miellan.clients.pavlovmedia.com:9481/"
 
 def test_foo():
