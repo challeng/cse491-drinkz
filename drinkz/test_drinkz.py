@@ -7,6 +7,7 @@ rules ;).
 """
 
 import sys
+import os
 sys.path.insert(0, 'bin/') # allow _mypath to be loaded; @CTB hack hack hack
 
 from cStringIO import StringIO
@@ -14,9 +15,37 @@ import imp
 
 from . import db, load_bulk_data
 
+server_name = "http://host-21-166.miellan.clients.pavlovmedia.com:9481/"
+
 def test_foo():
     # this test always passes; it's just to show you how it's done!
     print 'Note that output from passing tests is hidden'
+
+
+def test_rpc_lt():
+    db._reset_db()
+
+    os.system("python drinkz/json-rpc-client.py " + server_name)
+    print db.len_bottle_types()
+    #assert db._check_bottle_type_exists('Johnnie Walker', 'Black Label')
+
+
+def test_rpc_li():
+    db._reset_db()
+
+    os.system("python drinkz/json-rpc-client.py " + server_name)
+    amount = db.get_liquor_amount('Johnnie Walker', 'Black Label')
+
+    print amount
+    #assert amount == 100
+
+def test_rpc_rec():
+    db._reset_db()
+
+    os.system("python drinkz/json-rpc-client.py " + server_name)
+    r = db.get_recipe("scotch on the rocks")
+    assert r != False
+
 
 def test_total_ml_oz():
     db._reset_db()
@@ -148,6 +177,26 @@ def test_bulk_load_bottle_types_comments():
 
     assert db._check_bottle_type_exists('Johnnie Walker', 'Black Label')
     assert n == 1, n
+
+def test_bulk_load_recipes_1():
+    db._reset_db()
+
+    file1 = open('test-data/recipes-data-1.txt', 'r')
+
+    n = load_bulk_data.load_recipes(file1)
+    print n
+
+    assert n == 1, n
+
+def test_bulk_load_recipes_2():
+    db._reset_db()
+
+    file1 = open('test-data/recipes-data-2.txt', 'r')
+
+    n = load_bulk_data.load_recipes(file1)
+    print n
+
+    assert n == 2, n
 
 
 def test_bulk_load_bottle_types_newline():

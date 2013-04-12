@@ -1,0 +1,8 @@
+I will implement the user story that involves seeing the different ratings for the drinks at the party.
+The data component will be the rating for the drink. To me this makes sense the most by storing it in the recipe database, as the recipes(of the drink) would be what you are rating.
+I would implement the ways like an internal API so that you could retrieve the rating of the drink based on the recipe name. This would allow a fast lookup of the drink you wanted and the rating.
+
+I could add on the forms a way to enter a rating when the add a recipe or to look at previous recipes and rate them. I could then take the average of this rating to display on the website.
+The JSON-RPC would work the same way. I could send through data showing the recipe and it's rating. From here I could go in and take the average rating of the recipe by taking all the diff ratings of the recipe that I received from both JSON and from forms on the site.
+
+I think that doing this would effectively be a full implementation of the user story. I think making it an average rating from multiple sources would also be a cool way to dynamically change the recipes on the site from other people.

@@ -52,6 +52,9 @@ def add_bottle_type(mfg, liquor, typ):
 
     _bottle_types_db.add((mfg, liquor, typ))
 
+def len_bottle_types():
+    return len(_bottle_types_db)
+
 
 def _check_bottle_type_exists(mfg, liquor):
     for (m, l, _) in _bottle_types_db:
@@ -62,6 +65,8 @@ def _check_bottle_type_exists(mfg, liquor):
 
 def _find_bottle_from_type(typ):
     final = []
+    #print "in find bottle " + typ
+    #print _bottle_types_db
     for(m, l, t) in _bottle_types_db:
         if typ == t:
             final.append((m, l, t))
@@ -130,7 +135,7 @@ def get_liquor_types():
 
 
 
-def add_recipe(r):
+def add_recipe(r): 
     _recipe_db.add(r)
 
 def get_recipe(name):
@@ -166,6 +171,44 @@ def print_recipe_size():
     print len(_recipe_db)
     for e in _recipe_db:
         print e
+
+def recipes_to_make():
+    final_recipes = []
+    recipe_ok = True
+
+    for r in _recipe_db:
+        print r.name
+        for i in r.ingredients:
+            #print i
+            typ = i[0]
+            amount = i[1]
+            bottle = _find_bottle_from_type(typ)
+            
+
+            #if the bottle exists
+            if(bottle):
+                for b in bottle:
+                    mfg = b[0]
+                    liquor = b[1]
+
+
+                    #if we have not enough for recipe
+                    if get_liquor_amount(mfg, liquor) < convert_to_ml(amount):
+                        recipe_ok = False
+            #no bottle
+            else:
+                recipe_ok = False
+
+        if(recipe_ok == True):
+            final_recipes.append(r.name)
+        recipe_ok = True
+
+    return final_recipes
+
+
+
+
+
 
 
 

@@ -72,40 +72,41 @@ p34
 S'6 oz'
 p35
 tp36
-a(g16
-S'1.5 oz'
+a(S'vermouth'
 p37
-tp38
+S'1.5 oz'
+p38
+tp39
 asbag25
 (g26
 g27
-NtRp39
-(dp40
+NtRp40
+(dp41
 g30
 S'scotch on the rocks'
-p41
+p42
 sg32
-(lp42
+(lp43
 (g5
 S'4 oz'
-p43
-tp44
+p44
+tp45
 asbag25
 (g26
 g27
-NtRp45
-(dp46
+NtRp46
+(dp47
 g30
 S'vodka martini'
-p47
+p48
 sg32
-(lp48
+(lp49
 (g9
 g35
-tp49
-a(g16
-g37
 tp50
-asbatRp51
-tp52
+a(g37
+g38
+tp51
+asbatRp52
+tp53
 .

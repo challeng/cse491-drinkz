@@ -11,6 +11,7 @@ Module to load in bulk data from text files.
 import csv                              # Python csv package
 
 from . import db                        # import from local package
+from . import recipes
 
 def load_bottle_types(fp):
     """
@@ -50,6 +51,47 @@ def load_bottle_types(fp):
 
     return n
 
+def load_recipes(fp):
+    reader = csv.reader(fp)
+    a = []
+    ingredients = []
+    n=0
+
+
+    for line in reader:
+        try:
+            #a.append(line)
+            a = line
+        except ValueError:
+            print 'Badly formatted line: %s' % line
+            continue
+
+
+        name = a[0]
+        counter = 0
+        for data in a:
+            #recipe name
+            if counter == 0:
+                counter = counter+1
+                continue
+            #odd, its the type
+            if counter%2 == 1:
+                ing = (a[counter], a[counter+1])
+                ingredients.append(ing)
+
+
+            counter = counter+1
+
+
+         
+        r = recipes.create(name, ingredients)
+        if r:
+            n +=1
+        db.add_recipe(r)
+
+    return n
+
+
 def data_reader(fp):
     reader = csv.reader(fp)
  
@@ -58,6 +100,8 @@ def data_reader(fp):
         if len(line) == 0 or line[0].startswith('#'):
             #raise db.BadData("bad Data!")
             continue
+
+        print len(line)
 
         yield line
 

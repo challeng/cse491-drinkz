@@ -1,0 +1,7 @@
+Example files are recipes-data-1.txt and recipes-data-2.txt
+
+name is first, followed by all ingredients separated by spaces only
+Ex: "scotch on the rocks blended scotch 4 oz"
+
+if more the one recipe, just do the same thing on the next line
+Example for this in recipes-data-2.txt

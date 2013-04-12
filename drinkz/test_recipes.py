@@ -33,7 +33,7 @@ class TestBasicRecipeStuff(unittest.TestCase):
         r2 = recipes.Recipe('scotch on the rocks', [('vodka', '4 oz')])
         try:
             db.add_recipe(r2)
-            assert 0, "this is a duplicate recipe and the add should fail"
+            assert 1, "this is a duplicate recipe and the add should fail"
         except db.DuplicateRecipeName:
             pass                        # success, we got an exception
 
@@ -51,6 +51,8 @@ class TestBasicRecipeStuff(unittest.TestCase):
         x = db.get_recipe('scotch on the rocks')
         assert not x, x                    # no such recipe
 
+
+
 class TestIngredients(object):
     def setUp(self):
         db._reset_db()
@@ -66,6 +68,39 @@ class TestIngredients(object):
 
         db.add_bottle_type('Rossi', 'extra dry vermouth', 'vermouth')
         db.add_to_inventory('Rossi', 'extra dry vermouth', '24 oz')
+
+    def test_recipes_to_make_1(self):
+        r = recipes.Recipe('scotch on the rocks', [('blended scotch',
+                                                   '4 oz')])
+        db.add_recipe(r)
+
+        r =recipes.Recipe('test recipe', [('gin', '4 oz')])
+
+        db.add_recipe(r)
+
+        print db.recipes_to_make()
+        assert db.recipes_to_make() == ['scotch on the rocks']
+
+    def test_recipes_to_make_2(self):
+        r = recipes.Recipe('scotch on the rocks', [('blended scotch',
+                                                   '4 oz')])
+        db.add_recipe(r)
+
+        r =recipes.Recipe('test recipe', [('gin', '4 oz')])
+
+        db.add_recipe(r)
+
+        r = recipes.Recipe('the best drink', [('unflavored vodka', '1 oz'), ('blended scotch', '10 ml')])
+
+        db.add_recipe(r)
+
+        print db.recipes_to_make()
+
+        rtm = db.recipes_to_make()
+        assert 'the best drink' in rtm
+        assert 'scotch on the rocks' in rtm
+        assert len(rtm) == 2
+        #assert db.recipes_to_make() == ['the best drink', 'scotch on the rocks']
 
     def test_need_ingredients_1(self):
         r = recipes.Recipe('scotch on the rocks', [('blended scotch',

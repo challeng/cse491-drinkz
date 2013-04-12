@@ -68,40 +68,44 @@ sS'ingredients'
 p32
 (lp33
 (S'orange juice'
+p34
 S'6 oz'
-tp34
+p35
+tp36
 a(g16
 S'1.5 oz'
-tp35
+p37
+tp38
 asbag25
 (g26
 g27
-NtRp36
-(dp37
+NtRp39
+(dp40
 g30
 S'scotch on the rocks'
-p38
+p41
 sg32
-(lp39
-(S'blended scotch'
+(lp42
+(g5
 S'4 oz'
-tp40
+p43
+tp44
 asbag25
 (g26
 g27
-NtRp41
-(dp42
+NtRp45
+(dp46
 g30
 S'vodka martini'
-p43
+p47
 sg32
-(lp44
-(S'unflavored vodka'
-S'6 oz'
-tp45
+(lp48
+(g9
+g35
+tp49
 a(g16
-S'1.5 oz'
-tp46
-asbatRp47
-tp48
+g37
+tp50
+asbatRp51
+tp52
 .
