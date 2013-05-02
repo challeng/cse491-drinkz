@@ -6,3 +6,7 @@ I could add on the forms a way to enter a rating when the add a recipe or to loo
 The JSON-RPC would work the same way. I could send through data showing the recipe and it's rating. From here I could go in and take the average rating of the recipe by taking all the diff ratings of the recipe that I received from both JSON and from forms on the site.
 
 I think that doing this would effectively be a full implementation of the user story. I think making it an average rating from multiple sources would also be a cool way to dynamically change the recipes on the site from other people.
+
+*******************************
+Implementation is added!!!
+You can add the ratings through the code or through a form on the website.

@@ -8,6 +8,17 @@ there are no key,value pairs.
 """
 
 from cPickle import dump, load
+import sqlite3
+import os
+
+os.unlink('data.db')
+db = sqlite3.connect('data.db')
+c = db.cursor()
+
+#db setup
+c.execute('CREATE TABLE bottle_types (mfg TEXT, l TEXT, typ TEXT)')
+c.execute('CREATE TABLE inventory (mfg TEXT, l TEXT, amt TEXT)')
+c.execute('CREATE TABLE recipes (name TEXT, ingredients TEXT, rating TEXT)')
 
 # private singleton variables at module level
 _bottle_types_db = set([])
@@ -35,6 +46,21 @@ def load_db(filename):
 
     loaded = load(fp)
     (_bottle_types_db, _inventory_db, _recipe_db) = loaded
+
+    for m, l, t in _bottle_types_db:
+        c.execute('INSERT INTO bottle_types (mfg, l, typ) VALUES (?, ?, ?)', (m,l,t))
+
+    for k in _inventory_db:
+        mfg = k[0]
+        l = k[1]
+        amt = _inventory_db[k]
+        c.execute('INSERT INTO inventory (mfg, l, amt) VALUES (?, ?, ?)', (m,l,amt))
+
+    for r in _recipe_db:
+        ingredients = ""
+        for ing in r.ingredients:
+            ingredients += "ing, "
+        c.execute('INSERT INTO recipes (name, ingredients, rating) VALUES (?, ?, ?)', (r.name, ingredients, r.trueRating))
 
     fp.close()
 
@@ -136,7 +162,11 @@ def get_liquor_types():
 
 
 def add_recipe(r): 
+    print "adding"
     _recipe_db.add(r)
+
+def rate_recipe(r, rating):
+    r.rate(rating)
 
 def get_recipe(name):
     for r in _recipe_db:

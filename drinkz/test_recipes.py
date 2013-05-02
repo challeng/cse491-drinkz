@@ -69,6 +69,46 @@ class TestIngredients(object):
         db.add_bottle_type('Rossi', 'extra dry vermouth', 'vermouth')
         db.add_to_inventory('Rossi', 'extra dry vermouth', '24 oz')
 
+    def test_rate_recipe_1(self):
+        r = recipes.Recipe('scotch on the rocks', [('blended scotch',
+                                                   '4 oz')])
+        db.add_recipe(r)
+
+        db.rate_recipe(r, 3)
+
+        r = db.get_recipe('scotch on the rocks')
+
+
+        print r.trueRating
+        assert r.trueRating == 3
+
+    def test_rate_recipe_2(self):
+        r = recipes.Recipe('scotch on the rocks', [('blended scotch',
+                                                   '4 oz')])
+        db.add_recipe(r)
+
+        db.rate_recipe(r, 6)
+
+        r = db.get_recipe('scotch on the rocks')
+
+
+        print r.trueRating
+        assert r.trueRating == 0
+
+    def test_rate_recipe_3(self):
+        r = recipes.Recipe('scotch on the rocks', [('blended scotch',
+                                                   '4 oz')])
+        db.add_recipe(r)
+
+        db.rate_recipe(r, 4)
+        db.rate_recipe(r,2)
+
+        r = db.get_recipe('scotch on the rocks')
+
+
+        print r.trueRating
+        assert r.trueRating == 3
+
     def test_recipes_to_make_1(self):
         r = recipes.Recipe('scotch on the rocks', [('blended scotch',
                                                    '4 oz')])

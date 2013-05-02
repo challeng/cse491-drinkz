@@ -10,6 +10,9 @@ class Recipe(object):
 	"""
 	name = ""
 	ingredients = []
+	trueRating = 0;
+	rating = -1
+	ratingCount = 0
 	def __init__(self, name, ingredients):
 		super(Recipe, self).__init__()
 		self.name = name
@@ -21,6 +24,26 @@ class Recipe(object):
 		if self.name == other.name and self.ingredients == other.ingredients:
 			return True
 		return False
+
+	def rate(self, r):
+		if int(r) > 5 or int(r) < 0:
+			return
+
+		if self.rating == -1:
+			
+			self.ratingCount = 1
+			self.rating = int(r)
+		else:
+			
+			self.ratingCount += 1
+			self.rating += int(r)
+
+
+		if self.rating == 0 or self.ratingCount == 0:
+			pass
+		else:
+			self.trueRating = float(self.rating) / float(self.ratingCount)
+
 
 	def need_ingredients(self):
 		needed_ingredients = []
